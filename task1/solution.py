@@ -1,31 +1,35 @@
 import sys
 
-def get_circular_path(n, m):
-    if n == 0:
-        return ""
-    res = []
-    current = 0
+def get_path(n, m):
+    if n == 1:
+        return "1"
+    
+    path = []
+    current = 1  
     while True:
-        res.append(str(current + 1))
-        current = (current + m - 1) % n
-        if current == 0:
+        path.append(str(current))
+        current = (current + m - 2) % n + 1
+        
+        if current == 1:
             break
-    return "".join(res)
+    return "".join(path)
 
 def main():
-    if len(sys.argv) < 2:
+    input_data = sys.stdin.read().split()
+    if not input_data:
         return
     
-    args = sys.argv[1:]
-    output = []
+    parts = list(map(int, input_data))
+    result = ""
     
-    for i in range(0, len(args), 2):
-        if i + 1 < len(args):
-            n = int(args[i])
-            m = int(args[i+1])
-            output.append(get_circular_path(n, m))
-            
-    print("".join(output))
+    
+    for i in range(0, len(parts), 2):
+        if i + 1 < len(parts):
+            n = parts[i]
+            m = parts[i+1]
+            result += get_path(n, m)
+    
+    print(result)
 
 if __name__ == "__main__":
     main()
