@@ -1,34 +1,29 @@
 import sys
 
 def main():
-    if len(sys.argv) < 3:
-        return
+    if len(sys.argv) != 3:
+        print("Ошибка: нужно указать 2 файла")
+        sys.exit(1)
 
-    file1 = sys.argv[1]
-    file2 = sys.argv[2]
+    ellipse_file = sys.argv[1]
+    points_file = sys.argv[2]
 
-    try:
-        with open(file1, 'r') as f:
-            lines = f.readlines()
-            x0, y0 = map(float, lines[0].split())
-            a, b = map(float, lines[1].split())
+    with open(ellipse_file) as f:
+        cx, cy = map(float, f.readline().split())
+        rx, ry = map(float, f.readline().split())
 
-        with open(file2, 'r') as f:
-            for line in f:
-                if not line.strip():
-                    continue
-                px, py = map(float, line.split())
-                
-                res = ((px - x0)**2 / a**2) + ((py - y0)**2 / b**2)
+    with open(points_file) as f:
+        for line in f:
+            x, y = map(float, line.split())
 
-                if abs(res - 1.0) < 1e-12:
-                    print(0)
-                elif res < 1.0:
-                    print(1)
-                else:
-                    print(2)
-    except Exception:
-        pass
+            value = ((x - cx) ** 2) / (rx ** 2) + ((y - cy) ** 2) / (ry ** 2)
+
+            if abs(value - 1) < 1e-9:
+                print(0)
+            elif value < 1:
+                print(1)
+            else:
+                print(2)
 
 if __name__ == "__main__":
     main()
