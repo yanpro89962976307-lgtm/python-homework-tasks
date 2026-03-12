@@ -1,30 +1,31 @@
 import sys
 
 def main():
-    if len(sys.argv) < 2:
-        return
+    if len(sys.argv) != 2:
+        sys.exit(1)
 
-    file_path = sys.argv[1]
-    
+    path = sys.argv[1]
+
     try:
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(path, 'r', encoding='utf-8') as f:
             nums = [int(line.strip()) for line in f if line.strip()]
-        
+
         if not nums:
-            return
+            sys.exit(1)
 
         nums.sort()
-        median = nums[(len(nums) - 1) // 2]
-        
-        total_moves = sum(abs(num - median) for num in nums)
-        
-        if total_moves <= 20:
-            print(total_moves)
+        median = nums[len(nums) // 2]
+
+        moves = sum(abs(x - median) for x in nums)
+
+        if moves <= 20:
+            print(moves)
         else:
             print("20 ходов недостаточно для приведения всех элементов массива к одному числу")
-            
-    except Exception:
-        pass
+
+    except Exception as e:
+        print(e)
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
