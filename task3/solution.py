@@ -1,39 +1,37 @@
-import json
 import sys
+import json
 
-def fill_values(tests, values_map):
+def fill_values(tests, values_dict):
     for test in tests:
-        test_id = test.get('id')
-        if test_id in values_map:
-            test['value'] = values_map[test_id]
-        if 'values' in test:
-            fill_values(test['values'], values_map)
+        test_id = test.get("id")
+        if test_id in values_dict:
+            test["value"] = values_dict[test_id]
+        
+        if "values" in test:
+            fill_values(test["values"], values_dict)
 
 def main():
-    if len(sys.argv) < 4:
-        return
+    if len(sys.argv) != 4:
+        sys.exit(1)
 
-    values_path = sys.argv[1]
-    tests_path = sys.argv[2]
-    report_path = sys.argv[3]
+    v_path, t_path, r_path = sys.argv[1], sys.argv[2], sys.argv[3]
 
     try:
-        with open(values_path, 'r', encoding='utf-8') as f:
-            values_data = json.load(f)
-        
-        values_map = {item['id']: item['value'] for item in values_data.get('values', [])}
+        with open(v_path, 'r', encoding='utf-8') as f:
+            v_data = json.load(f)
+        with open(t_path, 'r', encoding='utf-8') as f:
+            t_data = json.load(f)
 
-        with open(tests_path, 'r', encoding='utf-8') as f:
-            tests_data = json.load(f)
+        v_dict = {item["id"]: item["value"] for item in v_data.get("values", [])}
 
-        if 'tests' in tests_data:
-            fill_values(tests_data['tests'], values_map)
+        if "tests" in t_data:
+            fill_values(t_data["tests"], v_dict)
 
-        with open(report_path, 'w', encoding='utf-8') as f:
-            json.dump(tests_data, f, indent=2, ensure_ascii=False)
+        with open(r_path, 'w', encoding='utf-8') as f:
+            json.dump(t_data, f, indent=2, ensure_ascii=False)
 
     except Exception:
-        pass
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
